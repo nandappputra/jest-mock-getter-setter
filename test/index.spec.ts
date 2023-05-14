@@ -1,33 +1,33 @@
-import { setMockProperty } from '../src';
-import { MockModule } from './mock_module';
+import { setMockProperty } from '../src/index';
+import { ClientRequest } from 'http';
 
 describe('setMockProperty', () => {
   describe('setMockProperty', () => {
     it('should mock a property of MockedObject', () => {
-      const mock = jest.createMockFromModule<MockModule>('./mock_module');
+      const mock = jest.createMockFromModule<ClientRequest>('http');
 
-      setMockProperty(mock, 'prop', '2');
+      setMockProperty(mock, 'finished', true);
 
-      expect(mock.prop).toMatch('2');
+      expect(mock.finished).toBe(true);
     });
 
     it('should should return a setter that can be asserted', () => {
-      const mock = jest.createMockFromModule<MockModule>('./mock_module');
+      const mock = jest.createMockFromModule<ClientRequest>('http');
 
-      const [, setter] = setMockProperty(mock, 'prop', '2');
+      const [, setter] = setMockProperty(mock, 'finished', true);
 
-      mock.prop = '3';
+      mock.finished = false;
 
       expect(setter).toBeCalledTimes(1);
-      expect(setter).toBeCalledWith('3');
+      expect(setter).toBeCalledWith(false);
     });
 
     it('should should return a getter that can be asserted', () => {
-      const mock = jest.createMockFromModule<MockModule>('./mock_module');
+      const mock = jest.createMockFromModule<ClientRequest>('http');
 
-      const [getter] = setMockProperty(mock, 'prop', '2');
+      const [getter] = setMockProperty(mock, 'finished', true);
 
-      mock.prop;
+      mock.finished;
 
       expect(getter).toBeCalledTimes(1);
     });
