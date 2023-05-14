@@ -8,7 +8,7 @@
 [![Commitizen Friendly][commitizen-img]][commitizen-url]
 [![Semantic Release][semantic-release-img]][semantic-release-url]
 
-> My awesome module
+Utility to create a mock for getter & setter. Useful if you want to use dependency injection without having to deal with the actual object's constructor.
 
 ## Install
 
@@ -19,32 +19,40 @@ npm install jest-mock-getter-setter
 ## Usage
 
 ```ts
-import { myPackage } from 'jest-mock-getter-setter';
+describe('setMockProperty', () => {
+  describe('setMockProperty', () => {
+    it('should mock a property of MockedObject', () => {
+      // mock some module with jest.createMockFromModule
+      const mock = jest.createMockFromModule<ClientRequest>('http');
 
-myPackage('hello');
-//=> 'hello from my package'
+      setMockProperty(mock, 'finished', true);
+
+      expect(mock.finished).toBe(true);
+    });
+
+    it('should should return a setter that can be asserted', () => {
+      const mock = jest.createMockFromModule<ClientRequest>('http');
+
+      const [, setter] = setMockProperty(mock, 'finished', true);
+
+      mock.finished = false;
+
+      expect(setter).toBeCalledTimes(1);
+      expect(setter).toBeCalledWith(false);
+    });
+
+    it('should should return a getter that can be asserted', () => {
+      const mock = jest.createMockFromModule<ClientRequest>('http');
+
+      const [getter] = setMockProperty(mock, 'finished', true);
+
+      mock.finished;
+
+      expect(getter).toBeCalledTimes(1);
+    });
+  });
+});
 ```
-
-## API
-
-### myPackage(input, options?)
-
-#### input
-
-Type: `string`
-
-Lorem ipsum.
-
-#### options
-
-Type: `object`
-
-##### postfix
-
-Type: `string`
-Default: `rainbows`
-
-Lorem ipsum.
 
 [build-img]:https://github.com/nandappputra/jest-mock-getter-setter/actions/workflows/release.yml/badge.svg
 [build-url]:https://github.com/nandappputra/jest-mock-getter-setter/actions/workflows/release.yml
